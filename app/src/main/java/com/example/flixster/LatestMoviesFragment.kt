@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,14 +16,8 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import okhttp3.Headers
 
 
-private const val API_KEY = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
+private const val API_KEY = "1cd9876f19987127737bfc0f7906fc0d"
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LatestMoviesFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LatestMoviesFragment : Fragment(), OnListFragmentInteractionListener {
 
     override fun onCreateView(
@@ -46,13 +41,26 @@ class LatestMoviesFragment : Fragment(), OnListFragmentInteractionListener {
         // Create and set up an AsyncHTTPClient()
         val client = AsyncHttpClient()
         val params = RequestParams()
-        params["api-key"] = API_KEY
+        params["api_key"] = API_KEY
 
         // Using the client, perform the HTTP request
         client [
-            "https://api.themoviedb.org/3/movie/now_playing",
-            params,
-            object: JsonHttpResponseHandler() {
+                "https://api.themoviedb.org/3/movie/now_playing",
+                params,
+                object: JsonHttpResponseHandler() {
+
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Headers,
+                    json: JsonHttpResponseHandler.JSON
+                ) {
+                    progressBar.hide()
+
+                    val models : List<LatestMovie>? = null
+                    recyclerView.adapter = models?.let { LatestMoviesAdapter(it, this@LatestMoviesFragment) }
+                    Log.d("LatestMoviesFragment", "response successful")
+                }
+
                 override fun onFailure(
                     statusCode: Int,
                     headers: Headers?,
@@ -68,22 +76,11 @@ class LatestMoviesFragment : Fragment(), OnListFragmentInteractionListener {
                     }
                 }
 
-                override fun onSuccess(
-                    statusCode: Int,
-                    headers: Headers?,
-                    json: JsonHttpResponseHandler.JSON
-                ) {
-                    progressBar.hide()
-                    val models : List<LatestMovie>? = null
-                    recyclerView.adapter = models?.let { LatestMoviesAdapter(it, this@LatestMoviesFragment) }
-                    Log.d("LatestMoviesFragment", "response successful")
-                }
-
             }
         ]
     }
 
     override fun onItemClick(item: LatestMovie) {
-        TODO("Not yet implemented")
+        Toast.makeText(context, "test: " + item.title, Toast.LENGTH_LONG).show()
     }
 }

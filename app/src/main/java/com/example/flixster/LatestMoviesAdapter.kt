@@ -3,8 +3,10 @@ package com.example.flixster
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 class LatestMoviesAdapter(
     private val movies: List<LatestMovie>,
@@ -24,11 +26,12 @@ class LatestMoviesAdapter(
      */
     inner class MovieViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         var mItem: LatestMovie? = null
+        val mPoster: ImageView = mView.findViewById<View>(R.id.movieImage) as ImageView
         val mTitle: TextView = mView.findViewById<View>(R.id.title) as TextView
-        val mDescription: TextView = mView.findViewById<View>(R.id.description) as TextView
+        val mOverview: TextView = mView.findViewById<View>(R.id.overview) as TextView
 
         override fun toString(): String {
-            return mTitle.toString() + " '" + mDescription.text + "'"
+            return mTitle.toString() + " '" + mOverview.text + "'"
         }
     }
 
@@ -40,7 +43,12 @@ class LatestMoviesAdapter(
 
         holder.mItem = movie
         holder.mTitle.text = movie.title
-        holder.mDescription.text = movie.description
+        holder.mOverview.text = movie.overview
+
+        Glide.with(holder.mView)
+            .load("https://image.tmdb.org/t/p/w500"+movie.poster)
+            .centerInside()
+            .into(holder.mPoster)
 
         holder.mView.setOnClickListener {
             holder.mItem?.let { movie ->

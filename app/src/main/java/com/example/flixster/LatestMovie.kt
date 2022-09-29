@@ -12,10 +12,10 @@ class LatestMovie {
     @SerializedName("title")
     val title: String? = null
 
-    @SerializedName("bookImageUrl")
-    var bookImageUrl: String? = null
+    @SerializedName("poster_path")
+    var poster: String? = null
 
-    @SerializedName("description")
-    var description: String? = null
+    @SerializedName("overview")
+    var overview: String? = null
 
 }

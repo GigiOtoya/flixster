@@ -13,7 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import okhttp3.Headers
+import org.json.JSONArray
+import org.json.JSONObject
 
 
 private const val API_KEY = "1cd9876f19987127737bfc0f7906fc0d"
@@ -55,10 +59,19 @@ class LatestMoviesFragment : Fragment(), OnListFragmentInteractionListener {
                     json: JsonHttpResponseHandler.JSON
                 ) {
                     progressBar.hide()
+                    // Filtering JSON
+                    val results : JSONArray = json.jsonObject.get("results") as JSONArray
+                    val movies : String = results.toString()
+                    val gson = Gson()
+                    val arrayMovieType = object : TypeToken<List<LatestMovie>>() {}.type
+                    // Create a list of movies
+                    val models : List<LatestMovie> = gson.fromJson(movies, arrayMovieType)
+                    recyclerView.adapter = LatestMoviesAdapter(models, this@LatestMoviesFragment)
 
-                    val models : List<LatestMovie>? = null
-                    recyclerView.adapter = models?.let { LatestMoviesAdapter(it, this@LatestMoviesFragment) }
+
+                    //recyclerView.adapter = models?.let { LatestMoviesAdapter(it, this@LatestMoviesFragment) }
                     Log.d("LatestMoviesFragment", "response successful")
+                    Log.d("DEBUG_ARRAY", json.jsonObject.toString())
                 }
 
                 override fun onFailure(

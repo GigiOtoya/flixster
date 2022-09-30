@@ -10,4 +10,6 @@
     <color name="lightGray">#C9FFFFFF</color>
     <color name="darkBlueGray">#26292C</color>
     <color name="DarkCharcoal">#111213</color>
+    <color name="red_900">#B71C1C</color>#F44336
+    <color name="red_500">#F44336</color>
 </resources>
